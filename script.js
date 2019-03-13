@@ -40,3 +40,11 @@ function createList(data){
     }
 
 }
+
+twttr.widgets.createTweet(
+    '1105894583056113664',
+    $("#translation"),
+    {
+        theme: 'dark'
+    }
+);
