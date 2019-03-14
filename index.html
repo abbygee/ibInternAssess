@@ -9,22 +9,6 @@
 
 </head>
 <body>
-<script>window.twttr = (function(d, s, id) {
-    var js, fjs = d.getElementsByTagName(s)[0],
-        t = window.twttr || {};
-    if (d.getElementById(id)) return t;
-    js = d.createElement(s);
-    js.id = id;
-    js.src = "https://platform.twitter.com/widgets.js";
-    fjs.parentNode.insertBefore(js, fjs);
-
-    t._e = [];
-    t.ready = function(f) {
-        t._e.push(f);
-    };
-
-    return t;
-}(document, "script", "twitter-wjs"));</script>
 Enter a word:<input type="text" id="word">
 
 <select id="langs">
@@ -34,7 +18,11 @@ Enter a word:<input type="text" id="word">
 <button id="run" onclick="translateWord()"> Go! </button>
 
 <div id="translation"></div>
+<div id="tweetHolder" style="display:none">
+    <a class="twitter-timeline" data-width="600" data-height="660" data-link-color="#2B7BB9" href="https://twitter.com/MichelleObama?ref_src=twsrc%5Etfw">Tweets by MichelleObama</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
 
 <a class="twitter-timeline" data-width="600" data-height="660" data-link-color="#2B7BB9" href="https://twitter.com/MichelleObama?ref_src=twsrc%5Etfw">Tweets by MichelleObama</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
 </body>
 </html>

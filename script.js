@@ -4,10 +4,8 @@ $.ajax({
     type: 'POST',
     success: function(result){
         console.log(result);
-        createList(result)
-    },
-    error: function () {
-        alert('Failed!');
+        createList(result);
+        console.log($('p.timeline-Tweet-text').text);
     }
 });
 
@@ -19,13 +17,12 @@ function translateWord(){
         url: "https://translate.yandex.net/api/v1.5/tr.json/translate?text=" + text + "&lang=" + lang + "&key=trnsl.1.1.20190312T203236Z.0b8cd82697e99ad0.60ad6c537ddb42128b819afad99fecdde65279b8",
         type: 'POST',
         success: function(result){
-            console.log(result);
             var trans = $("#translation");
             trans.empty();
             trans.append(result.text[0]);
         },
         error: function () {
-            alert('Failed!');
+            alert('Please choose a language for translation!');
         }
     });
 }
@@ -41,10 +38,20 @@ function createList(data){
 
 }
 
-twttr.widgets.createTweet(
-    '1105894583056113664',
-    $("#translation"),
-    {
-        theme: 'dark'
+!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+function extractTweets() {
+    var tweets = $('#tweetHolder iframe').contents().find('li.tweet');
+    var tweetObjects = [];
+    for (var i=0; i < tweets.length; ++i) {
+        var cur = $(tweets[i]);
+
+        var tweet = {};
+        tweet.authorFullName = cur.find("span.full-name span.p-name").html();
+        tweet.authorUserName = cur.find("span.p-nickname b").html();
+        tweet.date = cur.find("a.u-url").attr("data-datetime");
+        tweet.id = cur.attr("data-tweet-id");
+        tweet.text = $.trim(cur.find("p.e-entry-title").html());
+        tweetObjects.push(tweet);
     }
-);
+    console.log(tweetObjects);
+}
