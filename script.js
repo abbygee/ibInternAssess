@@ -57,10 +57,11 @@ function createList(data){
 //     }
 // }
 
+
 function translateWord(){
     var user = $("#twtuser").val();
     $.ajax({
-        url: "https://twitter-relay.herokuapp.com/twitterAPI?user=bts_twt",
+        url: "https://twitter-relay.herokuapp.com/twitterAPI?user=" + user,
         dataType: 'JSON',
         success: function (result) {
             console.log(result);
