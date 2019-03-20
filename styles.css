@@ -1,0 +1,89 @@
+.inbl{
+    display: inline-block;
+    vertical-align: middle;
+}
+
+#profile{
+    position: relative;
+    font-family: Helvetica;
+    font-size: large;
+    left: 10px;
+    bottom: 10px;
+    background-color: #f8f8f8;
+    border: 1px solid white;
+    border-radius: 5px;
+    padding: 7px;
+    max-width: 460px;
+}
+
+#dn{
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+#at{
+    font-weight: initial;
+    font-size: small;
+    color: #575757;
+}
+
+#pfp{
+    width:60px;
+    clip-path: circle(50% at 50% 50%)
+}
+
+#main{
+    position: absolute;
+    right: 200px;
+}
+
+/*not my css*/
+
+#left-timeline{
+    height: 100%;
+    width: 500px;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    overflow-x: hidden;
+    padding-top: 20px;
+
+
+    /*position: relative;*/
+    /*right: 10px;*/
+    /*bottom: 30px;*/
+    /*min-height: 100vh;*/
+    /*width: 400px;*/
+    background-color: lavender;
+}
+
+div.all-tweets p {
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 20px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.all-tweets{
+    font-family: "Helvetica Neue", Roboto, "Segoe UI", Calibri, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 16px;
+    background-color: white;
+    border-color: #eee #ddd #bbb;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    margin: 10px 5px;
+    padding: 0 16px 16px 16px;
+    max-width: 490px;
+    text-align: right;
+}
+
+div.all-tweets p:hover,
+div.all-tweets p:focus {
+    text-decoration: underline;
+}
