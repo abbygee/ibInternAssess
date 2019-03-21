@@ -112,41 +112,88 @@ function makeTweets(data){
     for(var i = 0; i < data.statuses.length; i++){
         var text = data.statuses[i].full_text;
         var media = text.includes("https");
-
         var date = data.statuses[i].created_at.substring(0,9);
 
+        var quote = "";
+        var reply = "";
+        var vid = "";
+        var img = "";
 
         if(data.statuses[i].is_quote_status === true){
-            div.append('<div class="all-tweets" id="' + i + '"><div class="quote">@' + data.statuses[i].quoted_status.user.screen_name
-                + ': "' + data.statuses[i].quoted_status.full_text + '"</div><p>' + data.statuses[i].full_text + '</p>'
-                + date +'</div>');
+            quote = '<div class="quote">@' + data.statuses[i].quoted_status.user.screen_name +
+                ': "' + data.statuses[i].quoted_status.full_text + '"</div>';
         }else{
-            if(data.statuses[i].entities.user_mentions.length > 0){
-                div.append('<div class="all-tweets" id="' + i + '"><div class="reply">in reply to @' +
-                    data.statuses[i].entities.user_mentions[0].screen_name + '</div><p>' + data.statuses[i].full_text + '</p>'
-                    + date +'</div>');
+            if(media === true){
 
-            }else{
-                //fix this media thing to also consider other urls outside of photos and videos
-                if(media === true){
-                    if(data.statuses[i].extended_entities.media.length > 0){
-                        var type = data.statuses[i].extended_entities.media[i].type;
-                        if(type === "photo"){
-                            div.append('<div class="all-tweets" id="' + i + '"><p>' + data.statuses[i].full_text +
-                                '</p><img class="media" src="' + data.statuses[i].extended_entities.media[i].media_url + '"></div>');
-                        }
-                        if(type === "video"){
-                        div.append('<div class="all-tweets" id="' + i + '"><p>' + data.statuses[i].full_text +
-                            '</p><video class="media" controls muted loop autoplay ><source src="'+
-                            data.statuses[i].extended_entities.media[i].video_info.variants[2].url +'"></video></div>');
-                        }
+                //problem with even tho it has a url it doesn't have extended entities so you have to fix that error
+                if(data.statuses[i].extended_entities.media.length > 0){
+                    var type = data.statuses[i].extended_entities.media[0].type;
+                    if(type === "photo"){
+                        img = '<img class="media" src=' + data.statuses[i].extended_entities.media[0].media_url + '><br>';
                     }
-                }else{
-                    div.append('<div class="all-tweets" id="'+ i + '"><p>' + data.statuses[i].full_text + '</p>'
-                        + date + '</div>')
+                    if(type === "video"){
+                        vid = '<video class="media" controls muted loop autoplay><source src='+
+                            data.statuses[i].extended_entities.media[0].video_info.variants[2].url + '></video><br>';
+                    }
+
                 }
-            }
         }
+
+        if(data.statuses[i].in_reply_to_screen_name !== null){
+            reply = '<div class="reply">in reply to @' + data.statuses[i].in_reply_to_screen_name + '</div>';
+        }
+
+            //tried to work with other media types but idk
+            // if(data.statuses[i].entities.urls.length > 0){
+            //     data.statuses[i].entities.urls[data.statuses[i].entities.urls.length - 1]
+            // }
+
+            div.append('<div class="all-tweets" id="'+ i + '">' + reply + quote + '<p>' + data.statuses[i].full_text + '</p>'
+                + img + vid + date + '</div>')
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        // if(data.statuses[i].is_quote_status === true){
+        //     div.append('<div class="all-tweets" id="' + i + '"><div class="quote">@' + data.statuses[i].quoted_status.user.screen_name
+        //         + ': "' + data.statuses[i].quoted_status.full_text + '"</div><p>' + data.statuses[i].full_text + '</p>'
+        //         + date +'</div>');
+        // }else{
+        //     if(data.statuses[i].entities.user_mentions.length > 0){
+        //         div.append('<div class="all-tweets" id="' + i + '"><div class="reply">in reply to @' +
+        //             data.statuses[i].entities.user_mentions[0].screen_name + '</div><p>' + data.statuses[i].full_text + '</p>'
+        //             + date +'</div>');
+        //
+        //     }else{
+        //         //fix this media thing to also consider other urls outside of photos and videos
+        //         if(media === true){
+        //             if(data.statuses[i].extended_entities.media.length > 0){
+        //                 var type = data.statuses[i].extended_entities.media[0].type;
+        //                 if(type === "photo"){
+        //                     div.append('<div class="all-tweets" id="' + i + '"><p>' + data.statuses[i].full_text +
+        //                         '</p><img class="media" src=' + data.statuses[i].extended_entities.media[0].media_url + '>' + date + '</div>');
+        //                 }
+        //                 if(type === "video"){
+        //                 div.append('<div class="all-tweets" id="' + i + '"><p>' + data.statuses[i].full_text +
+        //                     '</p><video class="media" controls muted loop autoplay ><source src='+
+        //                     data.statuses[i].extended_entities.media[0].video_info.variants[2].url + '></video>' + date + '</div>');
+        //                 }
+        //             }
+        //         }else{
+        //             div.append('<div class="all-tweets" id="'+ i + '"><p>' + data.statuses[i].full_text + '</p>'
+        //                 + date + '</div>')
+        //         }
+        //     }
+        // }
     }
 }
 
