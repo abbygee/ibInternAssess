@@ -44,7 +44,7 @@
     padding-top: 20px;
 }
 
-div.reply, div.quote{
+div.reply, div.quote, div.rt{
     margin-top: 10px;
     text-align: left;
 }
@@ -68,6 +68,7 @@ div.reply, div.quote{
 .media {
     max-width: 400px;
     display: block;
+    max-height: 300px;
 }
 
 /*not my css*/

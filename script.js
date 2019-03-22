@@ -14,7 +14,6 @@ $(document).ready(function(){
     //somehow get it to automatically input MichelleObama as an example
 });
 
-
 //this function serves to create a list of the supported languages for the client to choose from
 function createList(data){
     for(i in data.langs){
@@ -59,7 +58,7 @@ function makeTwitter(){
                 makeTweets(result);
                 $("#profile").css("visibility", "visible");
                 $(".all-tweets").click(function (){
-                    var tweet = result.statuses[this.id].full_text;
+                    var tweet = result.statuses[this.id].edit;
                     translateTweet(tweet);
                 });
             }
@@ -70,15 +69,6 @@ function makeTwitter(){
 function translateTweet(tweet){
     var lang = $("#langs").val();
     if(check === 0){
-        $.ajax({
-            url: "https://translate.yandex.net/api/v1.5/tr/detect?key=trnsl.1.1.20190312T203236Z.0b8cd82697e99ad0.60ad6c537ddb42128b819afad99fecdde65279b8&text=" + tweet,
-            type: 'POST',
-            success: function(result) {
-                console.log(result);
-            }
-        });
-
-
         $.ajax({
             url: "https://translate.yandex.net/api/v1.5/tr.json/translate?lang=" + lang + "&key=trnsl.1.1.20190312T203236Z.0b8cd82697e99ad0.60ad6c537ddb42128b819afad99fecdde65279b8&text=" + tweet,
             type: 'POST',
@@ -103,97 +93,79 @@ function makeProfile(data){
         data.statuses[0].user.screen_name + '</div>' + '</div>');
 }
 
-
 function makeTweets(data){
     var div = $("#tweets");
     div.empty();
 
-
     for(var i = 0; i < data.statuses.length; i++){
         var text = data.statuses[i].full_text;
         var media = text.includes("https");
-        var date = data.statuses[i].created_at.substring(0,9);
+        // var RT = text.includes("RT @");
+        var urlLocate = text.search(" https");
+        var date = data.statuses[i].created_at.substring(0,10);
 
         var quote = "";
         var reply = "";
         var vid = "";
         var img = "";
 
+        //check if tweet is a quote tweet
         if(data.statuses[i].is_quote_status === true){
             quote = '<div class="quote">@' + data.statuses[i].quoted_status.user.screen_name +
                 ': "' + data.statuses[i].quoted_status.full_text + '"</div>';
+            text = data.statuses[i].full_text.slice(0, urlLocate);
         }else{
-            if(media === true){
-
-                //problem with even tho it has a url it doesn't have extended entities so you have to fix that error
-                if(data.statuses[i].extended_entities.media.length > 0){
+            //check if tweet involves media
+            if(media === true) {
+                if (data.statuses[i].hasOwnProperty('extended_entities') === true) {
                     var type = data.statuses[i].extended_entities.media[0].type;
-                    if(type === "photo"){
+                    if (type === "photo") {
                         img = '<img class="media" src=' + data.statuses[i].extended_entities.media[0].media_url + '><br>';
+                        text = data.statuses[i].full_text.slice(0, urlLocate);
                     }
-                    if(type === "video"){
-                        vid = '<video class="media" controls muted loop autoplay><source src='+
-                            data.statuses[i].extended_entities.media[0].video_info.variants[2].url + '></video><br>';
-                    }
+                    if (type === "video") {
+                        var testArray = [];
 
+                        //collects all four variants bitrates and pushes them into an array
+                        for(var x = 0; x < 4; x++){
+                            testArray.push(data.statuses[i].extended_entities.media[0].video_info.variants[x].bitrate);
+                        }
+
+                        //checks which index is the one with the high bitrate which means it holds the best video quality
+                        for(var n = 0; n < 4; n++){
+                            if(testArray[n] === 2176000){
+                                var videoURL = n;
+                            }
+                        }
+
+                        vid = '<video class="media" controls muted loop autoplay><source src=' +
+                            data.statuses[i].extended_entities.media[0].video_info.variants[videoURL].url + '></video><br>';
+                         text = data.statuses[i].full_text.slice(0, urlLocate);
+                    }
                 }
+            }
         }
 
+        //check if tweet is a reply
         if(data.statuses[i].in_reply_to_screen_name !== null){
             reply = '<div class="reply">in reply to @' + data.statuses[i].in_reply_to_screen_name + '</div>';
         }
 
-            //tried to work with other media types but idk
-            // if(data.statuses[i].entities.urls.length > 0){
-            //     data.statuses[i].entities.urls[data.statuses[i].entities.urls.length - 1]
-            // }
+        //check if tweet is a retweet which is irrelevant to translate
+        if(data.statuses[i].hasOwnProperty('retweeted_status') === true){
+            var x  = text.indexOf(":");
+            text = text.slice(x + 2, text.length);
 
-            div.append('<div class="all-tweets" id="'+ i + '">' + reply + quote + '<p>' + data.statuses[i].full_text + '</p>'
-                + img + vid + date + '</div>')
+            reply = '<div class="rt">RT @' + data.statuses[i].retweeted_status.user.screen_name + '</div>'
+
         }
 
+        div.append('<div class="all-tweets" id="'+ i + '">' + reply + quote + '<p>' + text + '</p>'
+                + img + vid + date + '</div>');
 
-
-
-
-
-
-
-
-
-
-
-        // if(data.statuses[i].is_quote_status === true){
-        //     div.append('<div class="all-tweets" id="' + i + '"><div class="quote">@' + data.statuses[i].quoted_status.user.screen_name
-        //         + ': "' + data.statuses[i].quoted_status.full_text + '"</div><p>' + data.statuses[i].full_text + '</p>'
-        //         + date +'</div>');
-        // }else{
-        //     if(data.statuses[i].entities.user_mentions.length > 0){
-        //         div.append('<div class="all-tweets" id="' + i + '"><div class="reply">in reply to @' +
-        //             data.statuses[i].entities.user_mentions[0].screen_name + '</div><p>' + data.statuses[i].full_text + '</p>'
-        //             + date +'</div>');
-        //
-        //     }else{
-        //         //fix this media thing to also consider other urls outside of photos and videos
-        //         if(media === true){
-        //             if(data.statuses[i].extended_entities.media.length > 0){
-        //                 var type = data.statuses[i].extended_entities.media[0].type;
-        //                 if(type === "photo"){
-        //                     div.append('<div class="all-tweets" id="' + i + '"><p>' + data.statuses[i].full_text +
-        //                         '</p><img class="media" src=' + data.statuses[i].extended_entities.media[0].media_url + '>' + date + '</div>');
-        //                 }
-        //                 if(type === "video"){
-        //                 div.append('<div class="all-tweets" id="' + i + '"><p>' + data.statuses[i].full_text +
-        //                     '</p><video class="media" controls muted loop autoplay ><source src='+
-        //                     data.statuses[i].extended_entities.media[0].video_info.variants[2].url + '></video>' + date + '</div>');
-        //                 }
-        //             }
-        //         }else{
-        //             div.append('<div class="all-tweets" id="'+ i + '"><p>' + data.statuses[i].full_text + '</p>'
-        //                 + date + '</div>')
-        //         }
-        //     }
-        // }
+        //add the edited tweet as a property to tweet object
+        data.statuses[i].edit = encodeURIComponent(text);
     }
 }
 
+function makeTransTweet(){}
