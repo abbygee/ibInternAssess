@@ -71,6 +71,34 @@ div.reply, div.quote, div.rt{
     max-height: 300px;
 }
 
+#ui{
+    text-align: center;
+    border: 2px solid lavender;
+    border-radius: 5px;
+    padding:20px 10px;
+    font-family: "Helvetica Neue", Roboto, "Segoe UI", Calibri, sans-serif;
+    font-weight: bold;
+    font-size: 17px;
+}
+
+#pro, #langs{
+    font-weight: bold;
+    font-size: 17px;
+    margin-top: 12px;
+}
+
+#pro{
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+#twtuser{
+    font-weight: lighter;
+    font-size: 13px;
+    font-style: italic;
+}
+
+
 /*not my css*/
 
 #left-timeline{
@@ -93,7 +121,7 @@ div.all-tweets p {
     cursor: pointer;
 }
 
-.all-tweets{
+.all-tweets, #translation{
     font-family: "Helvetica Neue", Roboto, "Segoe UI", Calibri, sans-serif;
     font-size: 12px;
     font-weight: bold;

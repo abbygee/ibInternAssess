@@ -111,9 +111,11 @@ function makeTweets(data){
 
         //check if tweet is a quote tweet
         if(data.statuses[i].is_quote_status === true){
-            quote = '<div class="quote">@' + data.statuses[i].quoted_status.user.screen_name +
-                ': "' + data.statuses[i].quoted_status.full_text + '"</div>';
-            text = data.statuses[i].full_text.slice(0, urlLocate);
+            if(data.statuses[i].hasOwnProperty('quoted_status')){
+                quote = '<div class="quote">@' + data.statuses[i].quoted_status.user.screen_name +
+                    ': "' + data.statuses[i].quoted_status.full_text + '"</div>';
+                text = data.statuses[i].full_text.slice(0, urlLocate);
+            }
         }else{
             //check if tweet involves media
             if(media === true) {
