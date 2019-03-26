@@ -1,5 +1,3 @@
-var check = 0;
-
 $(document).ready(function(){
     $.ajax({
         //this retrieves the supported languages from the server
@@ -48,7 +46,6 @@ function makeTwitter(){
         success: function(result){
             console.log(result);
             if(result.statuses.length === 0) {
-                check++;
                 alert("Twitter username doesn't exist, user is private, or user has no recent activity. Please " +
                     "try with a different user");
             }else{
@@ -66,21 +63,19 @@ function makeTwitter(){
 
 function translateTweet(tweet){
     var lang = $("#langs").val();
-    if(check === 0){
-        $.ajax({
-            url: "https://translate.yandex.net/api/v1.5/tr.json/translate?lang=" + lang + "&key=trnsl.1.1.20190312T203236Z.0b8cd82697e99ad0.60ad6c537ddb42128b819afad99fecdde65279b8&text=" + tweet,
-            type: 'POST',
-            success: function(result){
-                var trans = $("#translation");
-                trans.empty();
-                trans.append(result.text[0]);
-                trans.css("visibility", "visible");
-            },
-            error: function () {
-                alert('Please choose a language for translation!');
-            }
-        });
-    }
+    $.ajax({
+        url: "https://translate.yandex.net/api/v1.5/tr.json/translate?lang=" + lang + "&key=trnsl.1.1.20190312T203236Z.0b8cd82697e99ad0.60ad6c537ddb42128b819afad99fecdde65279b8&text=" + tweet,
+        type: 'POST',
+        success: function(result){
+            var trans = $("#translation");
+            trans.empty();
+            trans.append(result.text[0]);
+            trans.css("visibility", "visible");
+        },
+        error: function () {
+            alert('Please choose a language for translation!');
+        }
+    });
 }
 
 function makeProfile(data){
