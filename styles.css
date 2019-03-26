@@ -67,18 +67,34 @@ div.reply, div.quote, div.rt{
 
 .media {
     max-width: 400px;
-    display: block;
     max-height: 300px;
+    display: block;
+}
+
+.images{
+    display: table;
+    width: 450px;
+}
+
+.cell{
+    vertical-align: middle;
+    padding: 2px;
+    display: table-cell;
+}
+
+.cell img{
+    max-width: 100%;
 }
 
 #ui{
     text-align: center;
-    border: 2px solid lavender;
+    border: 4px solid lavender;
     border-radius: 5px;
     padding:20px 10px;
     font-family: "Helvetica Neue", Roboto, "Segoe UI", Calibri, sans-serif;
     font-weight: bold;
     font-size: 17px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
 }
 
 #pro, #langs{
@@ -105,7 +121,6 @@ div.reply, div.quote, div.rt{
     height: 100%;
     width: 500px;
     position: fixed;
-    z-index: 1;
     top: 0;
     left: 0;
     overflow-x: hidden;
@@ -121,7 +136,24 @@ div.all-tweets p {
     cursor: pointer;
 }
 
-.all-tweets, #translation{
+#translation{
+    font-size: 20px;
+    font-weight: normal;
+    line-height: 20px;
+    text-align: left;
+    background-color: white;
+    border-color: #eee #ddd #bbb;
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+    margin: 10px 5px;
+    padding: 16px;
+    max-width: 490px;
+    visibility: hidden;
+}
+
+.all-tweets{
     font-family: "Helvetica Neue", Roboto, "Segoe UI", Calibri, sans-serif;
     font-size: 12px;
     font-weight: bold;

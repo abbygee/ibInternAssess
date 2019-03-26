@@ -10,8 +10,6 @@ $(document).ready(function(){
             createList(result);
         }
     });
-    //makeTwitter()
-    //somehow get it to automatically input MichelleObama as an example
 });
 
 //this function serves to create a list of the supported languages for the client to choose from
@@ -73,10 +71,10 @@ function translateTweet(tweet){
             url: "https://translate.yandex.net/api/v1.5/tr.json/translate?lang=" + lang + "&key=trnsl.1.1.20190312T203236Z.0b8cd82697e99ad0.60ad6c537ddb42128b819afad99fecdde65279b8&text=" + tweet,
             type: 'POST',
             success: function(result){
-                console.log(result);
                 var trans = $("#translation");
                 trans.empty();
                 trans.append(result.text[0]);
+                trans.css("visibility", "visible");
             },
             error: function () {
                 alert('Please choose a language for translation!');
@@ -100,7 +98,6 @@ function makeTweets(data){
     for(var i = 0; i < data.statuses.length; i++){
         var text = data.statuses[i].full_text;
         var media = text.includes("https");
-        // var RT = text.includes("RT @");
         var urlLocate = text.search(" https");
         var date = data.statuses[i].created_at.substring(0,10);
 
@@ -118,32 +115,46 @@ function makeTweets(data){
             }
         }else{
             //check if tweet involves media
-            if(media === true) {
-                if (data.statuses[i].hasOwnProperty('extended_entities') === true) {
-                    var type = data.statuses[i].extended_entities.media[0].type;
-                    if (type === "photo") {
+            if(media === true && data.statuses[i].hasOwnProperty('extended_entities') === true) {
+                var type = data.statuses[i].extended_entities.media[0].type;
+                if (type === "photo") {
+                    //for loop for when tweet contains more than 1 photo,
+                    if(data.statuses[i].extended_entities.media.length > 1){
+                        var numPhotos = data.statuses[i].extended_entities.media.length;
+
+                        img += '<div class="images">';
+                        for(var m = 0; m < numPhotos; m++){
+                            img += '<div class="cell"><img src=' + data.statuses[i].extended_entities.media[m].media_url + '></div>';
+                            text = data.statuses[i].full_text.slice(0, urlLocate);
+                        }
+                        img += '</div><br>';
+                    }else{
                         img = '<img class="media" src=' + data.statuses[i].extended_entities.media[0].media_url + '><br>';
                         text = data.statuses[i].full_text.slice(0, urlLocate);
                     }
-                    if (type === "video") {
-                        var testArray = [];
+                }
+                if (type === "video") {
+                    var testArray = [];
+                    var variants = data.statuses[i].extended_entities.media[0].video_info.variants;
 
-                        //collects all four variants bitrates and pushes them into an array
-                        for(var x = 0; x < 4; x++){
-                            testArray.push(data.statuses[i].extended_entities.media[0].video_info.variants[x].bitrate);
+                    //collects all of the variants bitrates and pushes them into an array
+                    for(var f = 0; f < variants.length; f++){
+                        if(variants[f].hasOwnProperty('bitrate')){
+                            testArray.push(variants[f].bitrate);
                         }
-
-                        //checks which index is the one with the high bitrate which means it holds the best video quality
-                        for(var n = 0; n < 4; n++){
-                            if(testArray[n] === 2176000){
-                                var videoURL = n;
-                            }
-                        }
-
-                        vid = '<video class="media" controls muted loop autoplay><source src=' +
-                            data.statuses[i].extended_entities.media[0].video_info.variants[videoURL].url + '></video><br>';
-                         text = data.statuses[i].full_text.slice(0, urlLocate);
                     }
+
+                    //checks which index is the one with the high bitrate which means it holds the best video quality
+                    var max = Math.max(...testArray);
+                    for(var n = 0; n < variants.length; n++){
+                        if(variants[n].bitrate === max){
+                            var videoURL = n;
+                        }
+                    }
+
+                    vid = '<video class="media" controls muted loop autoplay><source src=' +
+                        data.statuses[i].extended_entities.media[0].video_info.variants[videoURL].url + '></video><br>';
+                    text = data.statuses[i].full_text.slice(0, urlLocate);
                 }
             }
         }
@@ -153,7 +164,7 @@ function makeTweets(data){
             reply = '<div class="reply">in reply to @' + data.statuses[i].in_reply_to_screen_name + '</div>';
         }
 
-        //check if tweet is a retweet which is irrelevant to translate
+        //check if tweet is a retweet
         if(data.statuses[i].hasOwnProperty('retweeted_status') === true){
             var x  = text.indexOf(":");
             text = text.slice(x + 2, text.length);
@@ -169,5 +180,3 @@ function makeTweets(data){
         data.statuses[i].edit = encodeURIComponent(text);
     }
 }
-
-function makeTransTweet(){}
