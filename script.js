@@ -25,15 +25,18 @@ function checkUser(user){
     //checks if a user was entered
     if(user.length < 1){
         alert('Please type in a twitter username');
+        return false;
     }
 
     //check for @ symbol or blank spaces which is not necessary
     for(var i = 0; i < user.length; i++){
         if(user[i] === "@"){
             alert('Please type in the username without any symbols');
+            return false;
         }
         if(user[i] === " "){
             alert('Make sure to enter the username without spaces');
+            return false;
         }
     }
 }
@@ -41,26 +44,27 @@ function checkUser(user){
 //runs necessary function to create the twitter timeline
 function makeTwitter(){
     var user = $("#twtuser").val();
-    checkUser(user);
-    $.ajax({
-        url: "https://twitter-relay.herokuapp.com/twitterAPI?user=" + user,
-        dataType: 'JSON',
-        success: function(result){
-            console.log(result);
-            if(result.statuses.length === 0) {
-                alert("Twitter username doesn't exist, user is private, or user has no recent activity. Please " +
-                    "try with a different user");
-            }else{
-                makeProfile(result);
-                makeTweets(result);
-                $("#profile").css("visibility", "visible");
-                $(".all-tweets").click(function (){
-                    var tweet = result.statuses[this.id].edit;
-                    translateTweet(tweet);
-                });
+    if(checkUser(user) !== false){
+        $.ajax({
+            url: "https://twitter-relay.herokuapp.com/twitterAPI?user=" + user,
+            dataType: 'JSON',
+            success: function(result){
+                console.log(result);
+                if(result.statuses.length === 0) {
+                    alert("Twitter username doesn't exist, user is private, or user has no recent activity. Please " +
+                        "try with a different user");
+                }else{
+                    makeProfile(result);
+                    makeTweets(result);
+                    $("#profile").css("visibility", "visible");
+                    $(".all-tweets").click(function (){
+                        var tweet = result.statuses[this.id].edit;
+                        translateTweet(tweet);
+                    });
+                }
             }
-        }
-    });
+        });
+    }
 }
 
 //passes tweet to translation api
