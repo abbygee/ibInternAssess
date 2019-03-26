@@ -6,7 +6,7 @@
 #profile{
     visibility: hidden;
     position: relative;
-    font-family: Helvetica;
+    font-family: Helvetica, serif;
     font-size: large;
     left: 10px;
     bottom: 10px;
@@ -50,7 +50,7 @@ div.reply, div.quote, div.rt{
 }
 
 #start{
-    font-family: "Helvetica Neue", Roboto, "Segoe UI", Calibri, sans-serif;
+    font-family: "Helvetica Neue", serif;
     font-weight: bold;
     background-color: white;
     border-color: #eee #ddd #bbb;
@@ -91,7 +91,7 @@ div.reply, div.quote, div.rt{
     border: 4px solid lavender;
     border-radius: 5px;
     padding:20px 10px;
-    font-family: "Helvetica Neue", Roboto, "Segoe UI", Calibri, sans-serif;
+    font-family: "Helvetica Neue", sans-serif;
     font-weight: bold;
     font-size: 17px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
@@ -115,7 +115,7 @@ div.reply, div.quote, div.rt{
 }
 
 
-/*not my css*/
+/*adapted css below*/
 
 #left-timeline{
     height: 100%;
@@ -154,7 +154,7 @@ div.all-tweets p {
 }
 
 .all-tweets{
-    font-family: "Helvetica Neue", Roboto, "Segoe UI", Calibri, sans-serif;
+    font-family: "Helvetica Neue", sans-serif;
     font-size: 12px;
     font-weight: bold;
     line-height: 16px;
@@ -170,7 +170,6 @@ div.all-tweets p {
     text-align: right;
 }
 
-div.all-tweets p:hover,
-div.all-tweets p:focus {
+div.all-tweets p:hover, div.all-tweets p:focus {
     text-decoration: underline;
 }

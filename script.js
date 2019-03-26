@@ -20,6 +20,7 @@ function createList(data){
     }
 }
 
+//checks multiple aspects of user's input for the twitter user
 function checkUser(user){
     //checks if a user was entered
     if(user.length < 1){
@@ -37,6 +38,7 @@ function checkUser(user){
     }
 }
 
+//runs necessary function to create the twitter timeline
 function makeTwitter(){
     var user = $("#twtuser").val();
     checkUser(user);
@@ -61,6 +63,7 @@ function makeTwitter(){
     });
 }
 
+//passes tweet to translation api
 function translateTweet(tweet){
     var lang = $("#langs").val();
     $.ajax({
@@ -72,12 +75,13 @@ function translateTweet(tweet){
             trans.append(result.text[0]);
             trans.css("visibility", "visible");
         },
-        error: function () {
+        error: function (){
             alert('Please choose a language for translation!');
         }
     });
 }
 
+//creates twitter profile header
 function makeProfile(data){
     var div = $("#profile");
     div.empty();
@@ -86,6 +90,7 @@ function makeProfile(data){
         data.statuses[0].user.screen_name + '</div>' + '</div>');
 }
 
+//creates all tweets accessible from user
 function makeTweets(data){
     var div = $("#tweets");
     div.empty();
@@ -108,26 +113,28 @@ function makeTweets(data){
                     ': "' + data.statuses[i].quoted_status.full_text + '"</div>';
                 text = data.statuses[i].full_text.slice(0, urlLocate);
             }
+        //else statement bc a quote tweet can't include media
         }else{
             //check if tweet involves media
             if(media === true && data.statuses[i].hasOwnProperty('extended_entities') === true) {
                 var type = data.statuses[i].extended_entities.media[0].type;
+
                 if (type === "photo") {
                     //for loop for when tweet contains more than 1 photo,
                     if(data.statuses[i].extended_entities.media.length > 1){
-                        var numPhotos = data.statuses[i].extended_entities.media.length;
-
                         img += '<div class="images">';
-                        for(var m = 0; m < numPhotos; m++){
+                        for(var m = 0; m < data.statuses[i].extended_entities.media.length; m++){
                             img += '<div class="cell"><img src=' + data.statuses[i].extended_entities.media[m].media_url + '></div>';
                             text = data.statuses[i].full_text.slice(0, urlLocate);
                         }
                         img += '</div><br>';
                     }else{
+                        //single image
                         img = '<img class="media" src=' + data.statuses[i].extended_entities.media[0].media_url + '><br>';
                         text = data.statuses[i].full_text.slice(0, urlLocate);
                     }
                 }
+
                 if (type === "video") {
                     var testArray = [];
                     var variants = data.statuses[i].extended_entities.media[0].video_info.variants;
@@ -139,7 +146,7 @@ function makeTweets(data){
                         }
                     }
 
-                    //checks which index is the one with the high bitrate which means it holds the best video quality
+                    //checks which index is the one with the highest bitrate which means it holds the best video quality
                     var max = Math.max(...testArray);
                     for(var n = 0; n < variants.length; n++){
                         if(variants[n].bitrate === max){
@@ -148,7 +155,7 @@ function makeTweets(data){
                     }
 
                     vid = '<video class="media" controls muted loop autoplay><source src=' +
-                        data.statuses[i].extended_entities.media[0].video_info.variants[videoURL].url + '></video><br>';
+                        variants[videoURL].url + '></video><br>';
                     text = data.statuses[i].full_text.slice(0, urlLocate);
                 }
             }
@@ -161,6 +168,7 @@ function makeTweets(data){
 
         //check if tweet is a retweet
         if(data.statuses[i].hasOwnProperty('retweeted_status') === true){
+            //deletes the rt beginning within the text
             var x  = text.indexOf(":");
             text = text.slice(x + 2, text.length);
 
@@ -171,7 +179,7 @@ function makeTweets(data){
         div.append('<div class="all-tweets" id="'+ i + '">' + reply + quote + '<p>' + text + '</p>'
                 + img + vid + date + '</div>');
 
-        //add the edited tweet as a property to tweet object
+        //add the edited tweet (without the extra urls) as a property to tweet object
         data.statuses[i].edit = encodeURIComponent(text);
     }
 }
