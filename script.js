@@ -12,7 +12,7 @@ $(document).ready(function(){
 
 //this function serves to create a list of the supported languages for the client to choose from
 function createList(data){
-    for(i in data.langs){
+    for(var i in data.langs){
         var opt = document.createElement("option");
         opt.value = i;
         opt.innerHTML = data.langs[i];
