@@ -8,8 +8,8 @@
     position: relative;
     font-family: Helvetica, serif;
     font-size: large;
-    left: 10px;
-    bottom: 10px;
+    left: 12px;
+    bottom: 6px;
     background-color: #f8f8f8;
     border: 1px solid white;
     border-radius: 5px;
@@ -88,7 +88,7 @@ div.reply, div.quote, div.rt{
 
 #ui{
     text-align: center;
-    border: 4px solid lavender;
+    border: 4px solid #cae4f8;
     border-radius: 5px;
     padding:20px 10px;
     font-family: "Helvetica Neue", sans-serif;
@@ -125,7 +125,7 @@ div.reply, div.quote, div.rt{
     left: 0;
     overflow-x: hidden;
     padding-top: 20px;
-    background-color: lavender;
+    background-color: #cae4f8;
 }
 
 div.all-tweets p {
@@ -149,7 +149,6 @@ div.all-tweets p {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
     margin: 10px 5px;
     padding: 16px;
-    max-width: 490px;
     visibility: hidden;
 }
 
@@ -166,11 +165,10 @@ div.all-tweets p {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
     margin: 10px 5px;
     padding: 0 16px 16px 16px;
-    max-width: 490px;
     text-align: right;
 }
 
-div.all-tweets p:hover, div.all-tweets p:focus {
+div.all-tweets p:hover {
     text-decoration: underline;
 }
 
